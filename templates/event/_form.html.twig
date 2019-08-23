@@ -1,0 +1,15 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+
+{% block stylesheets %}
+<style media="screen">
+
+
+form{
+  width:30%;
+}
+</style>
+{% endblock %}

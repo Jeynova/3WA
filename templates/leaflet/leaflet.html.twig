@@ -1,0 +1,39 @@
+
+{% block stylesheet %}
+
+<style media="screen">
+  #mapid { height: 400px;width:400px; }
+</style>
+
+{% endblock %}
+
+<div id="mapid">
+
+
+</div>
+
+
+{% block javascript %}
+<script type="text/javascript">
+var longitude = {{ longitude }};
+var latitude = {{ latitude }};
+
+
+var map = L.map('mapid').setView([latitude,longitude ], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18,
+}).addTo(map);
+var circle = L.circle([latitude, longitude], {
+	color: 'red',
+	fillColor: '#f03',
+	fillOpacity: 0.5,
+	radius: 500
+}).addTo(map);
+
+
+
+</script>
+
+{% endblock %}

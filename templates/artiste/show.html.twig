@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artiste{% endblock %}
+
+{% block body %}
+    <h1>Artiste</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ artiste.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ artiste.name }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ artiste.country }}</td>
+            </tr>
+            <tr>
+                <th>Style</th>
+                <td>{{ artiste.style }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ artiste.description }}</td>
+            </tr>
+            <tr>
+                <th>Picture</th>
+                <td><img src="{{ artiste.picture }}" alt=""></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('artiste_index') }}">back to list</a>
+
+    <a href="{{ path('artiste_edit', {'id': artiste.id}) }}">edit</a>
+    <button class="btn btn-outline-warning btn-rounded btn-sm my-0"  id="styleBut">More like this</button>
+    <div class="ajaxContainer">
+      <table class="styleaAjax">
+
+      </table>
+
+    </div>
+    {% block javascript %}
+
+
+    <script type="text/javascript">
+    $( "#styleBut" ).click(function() {
+      var search = "{{artiste.style}}";
+      var data={
+        name:"value",value:search
+      };
+
+      $.getJSON("{{ path('ajaxArtiste', {'id': artiste.id})}}",function(string){
+        var array=string;
+        console.log(array);
+        $(".styleaAjax").html("");
+        for (var i = 0; i < array.length; i++) {
+          if (array[i]["id"] == {{artiste.id}}) {
+            continue;
+          }
+          else{
+          $(".styleaAjax").append("<tr><th>Nom : </th><td> "+array[i]["name"]+"</td></tr><tr><th>Description : </th><td> "+array[i]["description"]+"</td></tr><tr><th>Picture : </th><td><img  height='160' width='120'  src='"+array[i]['picture']+"' alt=''></td></tr><tr><td><a href='"+array[i]["href"]+"'>Show</a></td></tr>");
+          $(".styleaAjax").append("<br>");
+          }
+        }
+
+
+        //console.log(string);
+
+      });
+    });
+
+
+
+    </script>
+
+
+    {% endblock %}
+
+    {{ include('artiste/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home Label{% endblock %}
+
+{% block body %}
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+<p>Welcome {{ app.user.screenName }}</p>
+<a class="link" href="{{ path('logout') }}">Logout</a>
+{% endif %}
+
+{% endblock %}
+
+
+{% block stylesheets %}
+<style>
+.carousel {
+  width:640px;
+  height:480px;
+  overflow:hidden;
+}
+.carousel-caption {
+width: 100%;
+right:0;
+left:0;
+bottom:0;
+}
+</style>
+{% endblock %}
+{% block span %}
+{% include 'carousel/carousel.html.twig' %}
+<form class="form-inline md-form mr-auto mb-4">
+  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="ajaxSearch">
+</form>
+<button class="btn btn-outline-warning btn-rounded btn-sm my-0"  id="searchBut">Search</button>
+<br>
+<div class="ajaxShow">
+<table class="tableAjax">
+
+</table>
+</div>
+<br>
+{{hello}}
+
+<table>
+  {{nom|wiki(desc,link)|raw}}
+</table>
+{% endblock %}
+{% block javascript %}
+
+
+<script type="text/javascript">
+$( "#searchBut" ).click(function() {
+  var search = $("#ajaxSearch").val();
+  var data={
+    name:"value",value:search
+  };
+  $.post("{{ path('ajax')}}",data,function(string){
+    console.log(string);
+    $(".tableAjax").html("");
+    $(".tableAjax").html("<tr><th>Nom : </th><td> "+string[0]+"</td></tr><tr><th>Description : </th><td> "+string[2][0]+"</td></tr><tr><th>Lien : </th><td><a href='"+string[3][0]+"'>"+string[3][0]+"</a></td></tr>");
+  });
+});
+
+
+
+</script>
+
+
+{% endblock %}
