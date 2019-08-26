@@ -9,6 +9,7 @@ use Faker\Factory;
 use Faker\Generator;
 use App\Repository\ArtisteRepository;
 use App\Entity\Event;
+use App\Entity\Produit;
 
 class ArtisteFixtures extends Fixture
 {
@@ -43,7 +44,7 @@ private static $tabId = [];
 
 
 
-        for ($i=0; $i < 12; $i++) {
+        for ($i=0; $i < 25; $i++) {
 
             //$tabId[]=$a[$i]->getId();
 
@@ -70,7 +71,7 @@ $a=$a->findAll();
 //     //     ->setDescription($faker->sentence($nbWords = 6, $variableNbWords = true));
 //
 // }
-for ($i=0; $i < 12 ; $i++) {
+for ($i=0; $i < 25 ; $i++) {
 
     $rand=rand(0,(count($a)-1));
     $event = new Event();
@@ -83,6 +84,21 @@ for ($i=0; $i < 12 ; $i++) {
           ->setPrice($faker->numberBetween($min = 1000, $max = 350))
           ->setArtisteId($a[$rand]);
     $manager->persist($event);
+}
+
+
+
+
+    $manager->flush();
+    for ($i=0; $i < 25 ; $i++) {
+
+        $rand=rand(0,(count($a)-1));
+        $product = new Produit();
+        $product->setTitle($faker->catchPhrase)
+              ->setProductionDate($faker->dateTime($max = 'now', $timezone = null))
+              ->setDescription($faker->realText($maxNbChars = 30, $indexSize = 1))
+              ->setArtiste($a[$rand]);
+        $manager->persist($product);
 }
 
 

@@ -47,4 +47,11 @@ class AdminRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findNumberEvent($value){
+      $em = $this->getEntityManager();
+      $query = $em->createQuery('SELECT a, count(e.id) as try FROM App\Entity\Artiste a JOIN a.events e GROUP BY a.id HAVING try > ?1');
+      $query->setParameter(1,$value);
+      $result = $query->getResult();
+      return $result;
+    }
 }

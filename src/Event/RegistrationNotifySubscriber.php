@@ -6,6 +6,9 @@ use App\Entity\User;
 use App\Event\RegisterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Twig\Environment;
+
 
 
 /**
@@ -14,14 +17,19 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 class RegistrationNotifySubscriber implements EventSubscriberInterface
 {
+
+
+
     private $mailer;
     private $sender;
+    private $renderer;
 
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(\Swift_Mailer $mailer, Environment $renderer)
     {
         // On injecte notre expediteur et la classe pour envoyer des mails
         $this->mailer = $mailer;
         $this->sender ="4513e92d92-f7d9cf@inbox.mailtrap.io";
+        $this->renderer = $renderer;
     }
 
     public static function getSubscribedEvents(): array
@@ -38,15 +46,18 @@ class RegistrationNotifySubscriber implements EventSubscriberInterface
         $user = $event->getUser();
 
         $subject = "Bienvenue";
-        $body = "Bienvenue mon ami.e sur ce tutorial";
+        //$body = "Bievenue ".$user->getScreenName()." Vous pouvez valider votre inscription en allant vers ce lien";
 
         $message = (new \Swift_Message())
             ->setSubject($subject)
             ->setTo($user->getMail())
             ->setFrom($this->sender)
-            ->setBody($body, 'text/html')
+            ->setBody( $this->renderer->render('mail/validationMail.html.twig',['username' => $user->getScreenName(),
+            'mail' => $user->getMail(),
+            'token' => $user->getConfirmationToken()]),'text/html')
         ;
-
         $this->mailer->send($message);
+
+
     }
 }

@@ -37,6 +37,11 @@ class User implements UserInterface
      */
     private $roles=[];
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $confirmationToken;
+
 
     public function getId(): ?int
     {
@@ -94,6 +99,18 @@ class User implements UserInterface
 
     public function eraseCredentials() {
 
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
     }
 
 }

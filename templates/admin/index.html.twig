@@ -34,6 +34,22 @@
 
     <a href="{{ path('admin_new') }}">Create new</a>
 
+    <div class="cmsArray">
+      <table class="arrayData">
+        {% for item in result %}
+          <tr>
+            <td>{{item[0].name}}</td>
+            {% for event in events %}
+              {% if event.ArtisteId.id == item[0].id %}<td>{{ event.description }}</td>{% endif %}
+
+            {% endfor %}
+          </tr>
+
+        {% endfor %}
+
+      </table>
+
+    </div>
     {% else %}
   <p>Vous n'êtes pas un Admin</p>
   {% endif %}

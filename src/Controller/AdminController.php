@@ -5,10 +5,16 @@ namespace App\Controller;
 use App\Entity\Admin;
 use App\Form\AdminType;
 use App\Repository\AdminRepository;
+use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Produit;
+use App\Entity\Artiste;
+use App\Entity\User;
+use App\Entity\Event;
+use App\Entity\Actualite;
 
 /**
  * @Route("/admin")
@@ -18,10 +24,15 @@ class AdminController extends AbstractController
     /**
      * @Route("/", name="admin_index", methods={"GET"})
      */
-    public function index(AdminRepository $adminRepository): Response
+    public function index(AdminRepository $adminRepository, EventRepository $eventRepository): Response
     {
+
+      $result = $adminRepository->findNumberEvent(1);
+      //var_dump($eventRepository->findAll()).die;
         return $this->render('admin/index.html.twig', [
             'admins' => $adminRepository->findAll(),
+            'result' => $result,
+            'events' => $eventRepository->findAll(),
         ]);
     }
 
