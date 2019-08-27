@@ -7,6 +7,6 @@
 <p><code>{{ mail }}</code></p>
 
 <p>
-    <a href="localhost:8888{{ path('validation',{'token':  token } ) }}">Cliquez ici pour activer votre compte</a>
+    <a href="{{ url('validation',{'token':  token } ) }}">Cliquez ici pour activer votre compte</a>
 
 </p>

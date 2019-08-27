@@ -56,5 +56,21 @@ class ArtisteRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
+    public function queryArtist()
+    {
+      $q1 = $this->createQueryBuilder('a');
+      $expr = $q1->expr();
+      $subrequest = $q1->select('a.id')
+                       ->where($expr->like('a.country',
+                                    $expr->literal('UK'))
+                              );
+
+    return  $this->createQueryBuilder('a')
+           ->select('partial a.{id,name,style}')
+           ->addSelect('count(e.id) alias events')
+           ->innerJoin('a.events','e')
+           ->groupBy('a.id')
+           ->where($expr->in('a.id',$subrequest->getDQL()));
+    }
 
 }

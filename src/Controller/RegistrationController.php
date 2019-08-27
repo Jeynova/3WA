@@ -14,18 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Service\TokenHandle;
 
 class RegistrationController extends AbstractController
 {
   /**
   * @Route("/register", name="app_register")
   */
-  public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppCustomAuthenticator $authenticator,EventDispatcherInterface $dispatcher): Response
+  public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppCustomAuthenticator $authenticator,EventDispatcherInterface $dispatcher,TokenHandle $tokenGen): Response
   {
     $user = new Client();
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
-
     if ($form->isSubmitted() && $form->isValid()) {
       // encode the plain password
       $user->setPassword(
@@ -34,11 +34,13 @@ class RegistrationController extends AbstractController
           $form->get('plainPassword')->getData()
           )
         );
-        $user->setRoles(["ROLE_USER"]);
+        //$user->setRoles(["ROLE_USER"]);
         $entityManager = $this->getDoctrine()->getManager();
-        $user->setConfirmationToken($this->generateToken());
-        $token = $user->getConfirmationToken();
+        // $user->setConfirmationToken($this->generateToken());
+        // $token = $user->getConfirmationToken();
+        $tokenGen->generateToken($user);
         $username = $user->getScreenName();
+        $user->setIsValidate(0);
         $entityManager->persist($user);
         $entityManager->flush();
 
@@ -47,12 +49,13 @@ class RegistrationController extends AbstractController
         $dispatcher->dispatch($e, RegisterEvent::NAME);
 
 
-        return $guardHandler->authenticateUserAndHandleSuccess(
-          $user,
-          $request,
-          $authenticator,
-          'main' // firewall name in security.yaml
-        );
+        // return $guardHandler->authenticateUserAndHandleSuccess(
+        //   $user,
+        //   $request,
+        //   $authenticator,
+        //   'main' // firewall name in security.yaml
+        // );
+
       }
 
       return $this->render('registration/register.html.twig', [
@@ -63,8 +66,5 @@ class RegistrationController extends AbstractController
     * @return string
     * @throws \Exception
     */
-    private function generateToken()
-    {
-      return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-    }
+
   }

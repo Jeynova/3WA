@@ -25,8 +25,11 @@ class ArtisteController extends AbstractController
      */
     public function index(ArtisteRepository $artisteRepository): Response
     {
+        $test=$artisteRepository->queryArtist();
+
         return $this->render('artiste/index.html.twig', [
             'artistes' => $artisteRepository->findAll(),
+            'test' => $test,
         ]);
     }
 

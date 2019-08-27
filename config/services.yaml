@@ -6,6 +6,8 @@
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
     images: 'public/uploads/images'
+    templates:
+        -
 
 services:
 
@@ -58,6 +60,9 @@ services:
 
 
     App\Service\Magnify:
+
+    App\Service\TokenHandle:
+        arguments: [ "@doctrine.orm.entity_manager" ]
 
     App\Twig\HtmlExtension:
         tags:

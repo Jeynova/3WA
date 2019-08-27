@@ -18,6 +18,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
@@ -100,12 +101,14 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
    use TargetPathTrait;    private $entityManager;
    private $urlGenerator;
    private $csrfTokenManager;
-   private $passwordEncoder;    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
+   private $passwordEncoder;
+   private $sessionI;    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder,SessionInterface $sessionI)
    {
        $this->entityManager = $entityManager;
        $this->urlGenerator = $urlGenerator;
        $this->csrfTokenManager = $csrfTokenManager;
-       $this -> passwordEncoder = $passwordEncoder;
+       $this->passwordEncoder = $passwordEncoder;
+       $this->sessionI = $sessionI;
    }    public function supports(Request $request)
    {
        return 'app_login' === $request->attributes->get('_route')
@@ -134,6 +137,12 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
    {
        // Check the user's password or other credentials and return true or false
        // If there are no credentials to check, you can just return true
+       if ($user->getIsValidate() == 0) {
+         $this->sessionI->getFlashBag()->add('notValidate','Vous devez valider votre inscription!');
+         return $this->urlGenerator->generate('app_login');
+
+         // code...
+       }
        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);    }    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
    {
        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {

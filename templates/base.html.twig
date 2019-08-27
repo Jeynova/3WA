@@ -16,18 +16,23 @@
         {% block stylesheets %}<style>body{padding:10px;}</style>{% endblock %}
     </head>
     <body>
+      {% for message in app.flashes('notValidate') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+    {% endfor %}
       <ul class="nav justify-content-center bg-info">
         <li class="nav-item">
-          <a class="nav-link active " href="{{ path('home') }}">Accueil</a>
+          <a class="nav-link active " href="{{ path('home') }}">{% trans %}Home{% endtrans %}</a>
         </li>
   <li class="nav-item">
-    <a class="nav-link active " href="{{ path('actualite_index') }}">Actualites</a>
+    <a class="nav-link active " href="{{ path('actualite_index') }}">News</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{{ path('streaming_index') }}">Streaming</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="{{ path('event_index') }}">Evenement</a>
+    <a class="nav-link" href="{{ path('event_index') }}">Events</a>
   </li>
   <li class="nav-item">
     <a class="nav-link " href="{{ path('produit_index') }}">Product</a>
@@ -37,7 +42,7 @@
         {% block body %}{% endblock %}
         {% block span %}{% endblock %}
 
-        {% block javascripts %}{% endblock %}
+        {% block javascript %}{% endblock %}
 
     </body>
 </html>
