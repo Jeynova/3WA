@@ -67,3 +67,6 @@ services:
     App\Twig\HtmlExtension:
         tags:
             - twig.extension
+
+    App\DataFixtures\ArtisteFixtures:
+        public: True
