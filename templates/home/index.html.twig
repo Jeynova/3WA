@@ -4,16 +4,18 @@
 
 {% block body %}
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-<p>Welcome {{ app.user.screenName }}</p>
+<h1>Welcome {{ app.user.screenName }}</h1>
 <a class="link" href="{{ path('logout') }}">Logout</a>
 {% endif %}
-
+<p>Coucou</p>
 {% endblock %}
 
 
 {% block stylesheets %}
 <style>
-.carousel {
+body{
+  padding: 10px;
+}.carousel {
   width:640px;
   height:480px;
   overflow:hidden;

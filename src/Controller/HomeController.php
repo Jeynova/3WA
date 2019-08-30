@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/{_locale}", name="home", defaults={"_locale": "en"})
      */
     public function index(ActualiteRepository $actualiteRepository,HelloWorld $h,Wiki $wiki)
     {

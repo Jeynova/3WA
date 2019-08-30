@@ -62,7 +62,7 @@ class ArtisteRepositoryTest extends KernelTestCase
             ->findByStyle('jazz')
         ;
 
-        $this->assertCount(6, $artiste);
+        $this->assertCount(0, $artiste);
     }
 
     /**
